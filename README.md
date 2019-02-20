@@ -29,9 +29,20 @@ _Notes:
       ```C
       int *p; // declares a pointer to integer
               // the type of p is int*, that is, pointer to integer
+
+              // since this is a declaration without an assignment,
+              // the pointer has a value of NULL (or all-zeros), and
+
+              // address zero is reserved for the use of the operating
+              // system and restricted for user programs
       
       *p = 6; // writes 6 in the memory location where p points to
               // this is called dereferencing of (the pointer) p
+
+              // note that, if you run the above code in this sequence
+              // you will get a NULL pointer exception, usually
+              // called Segmentation Fault (we'll explain what this 
+              // means further along in the course)
       
       p = 0xffeeddccaa00; // changes what p points to (NOT RECOMMENDED)
       
@@ -182,6 +193,9 @@ _Notes:
        
        Put this code into a `main` function of a file and play around with it to explore the duality of arrays and pointers. Soon, we'll see more important implications and key uses of this fact.
        
-3. Function arguments of array types.
+3. Working with arrays in functions.
 
-    1. blablabla....
+    1. C functions can only take arguments of primitive types and can also only return primitive types. The fact that pointers are equivalent to integers make it possible to pass in pointer-type arguments to functions and return pointer-type values from functions. The fact that arrays are equivalent to pointers from the compiler's point of view allows us to pass them in as arguments and, _more dangerously_ (we'll see when and why), return arrays from functions. Here's an example that might be familiar:
+    
+       ```C
+       ```
