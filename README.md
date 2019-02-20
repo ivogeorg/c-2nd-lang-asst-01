@@ -8,16 +8,19 @@ The topics that will be explored are some of the most important in C and account
 
 ---
 
-_Notes:
-1. Pointers, esp. passing them around as arguments and return values.
-2. Array-pointer duality.
-3. Working with arrays in functions.
-4. Structures.
-5. `typedef`.
-6. Encapsulation of `compare`(e.g. for sorting algorithms).
-7. Dynamic memory allocation & correct size calculations.
-8. Allocation on the stack vs the heap._
-9. Useful functions, esp. sensible encapsulation & meaningful contracts (e.g. who initializes array arguments).
+Working notes:
+1. C ramp up
+   1. ~~Pointers, esp. passing them around as arguments and return values.~~
+   2. ~~Array-pointer duality.~~
+   3. ~~Working with arrays in functions.~~
+   4. Structures.
+   5. (Optional) The `typedef` keyword.
+   6. Allocation on the stack (aka _static_ allocation) vs the heap (aka _dynamic_ allocation). The `malloc` and `free` functions.
+   7. Dynamic memory allocation & correct size calculations.
+2. Sorting algorithms
+   1. Program organization.
+   2. Useful functions, esp. sensible encapsulation & meaningful contracts (e.g. who initializes array arguments).
+   3. Encapsulation of `compare`(e.g. for sorting algorithms).
 
 ---
 
@@ -257,16 +260,16 @@ _Notes:
        ______________________
        | 3 | 4 | 7 | 1 | 23 |
        |--------------------|   stack frame for get_array
-       | other data         |
+       | other data...      |
        |____________________|
        | iarray             |
        |--------------------|   stack frame for main
-       | other data         |
+       | other data...      |
        |____________________|
 
        (bottom of the stack)
        ```
-       The called function `get_array` has the local array allocated in its stack frame, and returns a pointer to it to the calling function `main`. And then, when it returns, its stack frame is wiped out (or just reclaimed for use by the next function `main` may call). Ooops! Now `main` has a pointer to memory that is _no longer valid_! This is the situation on the stack the morning after...
+       The called function `get_array` has the local array allocated in its stack frame, and returns a pointer to it to the calling function `main`. When it returns, its stack frame is _"popped"_ and any data there is wiped out (or just reclaimed for use by the next function `main` may call). Ooops! Now `main` has a pointer to memory that is _no longer valid_! This is the situation on the stack the morning after...
        ```       
                 ???          <-----\     
                                    |
@@ -281,4 +284,24 @@ _Notes:
        ```
        This is called a _dangling pointer_, and is only one of the cases in which it is likely to have one. Let this illustration serve as a reminder to check your pointers and develop good practices when writing C code.
        
-       
+4. _Structures_ are C's way of packing data of several different types into monolithic records. 
+
+   1. Structures, along with the _abstract data type_ technique in C (rather advanced and beyond the scope of this intro), are the predecessors of _classes_ in C++. The `struct` keyword is used to declare a named block of code which contains only variable declarations: primitive types, pointer types, or even other `struct` types. Incidentally, the `struct` and `class` keywords are equivalent and interchangeable for C++ classes. Let's see an example:
+   
+      ```C
+      struct student_record {
+          char first_name[10];
+          char last_name[10];
+          char nine_hundred[10];
+          int year_first_enrolled;
+      };
+      ```
+      `struct` goes first, then the arbitrary name of the structure type, and finally the `{}` code block containing the structure _members_ (aka _fields_), terminated with the customary semi-colon `;`.
+      
+      Declare some structure types of your own.
+      
+   2. member access... TODO
+   
+   3. pointers to structures... TODO
+   
+5. The `typedef` keyword... TODO
