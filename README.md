@@ -11,12 +11,13 @@ The topics that will be explored are some of the most important in C and account
 _Notes:
 1. Pointers, esp. passing them around as arguments and return values.
 2. Array-pointer duality.
-3. Useful functions, esp. sensible encapsulation & meaningful contracts (e.g. who initializes array arguments).
+3. Working with arrays in functions.
 4. Structures.
 5. `typedef`.
-6. Compare encapsulation (e.g. for sorting algorithms).
+6. Encapsulation of `compare`(e.g. for sorting algorithms).
 7. Dynamic memory allocation & correct size calculations.
 8. Allocation on the stack vs the heap._
+9. Useful functions, esp. sensible encapsulation & meaningful contracts (e.g. who initializes array arguments).
 
 ---
 
@@ -198,4 +199,86 @@ _Notes:
     1. C functions can only take arguments of primitive types and can also only return primitive types. The fact that pointers are equivalent to integers make it possible to pass in pointer-type arguments to functions and return pointer-type values from functions. The fact that arrays are equivalent to pointers from the compiler's point of view allows us to pass them in as arguments and, _more dangerously_ (we'll see when and why), return arrays from functions. Here's an example that might be familiar:
     
        ```C
+       #include <stdio.h>
+       
+       void swap_ends(int iarr[], int size) {  // passing the size of the array is good practice
+                                               // usually, the type is size_t, which can hold the
+                                               // largest possible size (usually equivalent to
+                                               // long long (you don't need to remember this now)
+           // standard safe swap code
+           int tmp = iarr[0];          // remember that iarr is of type int*, but iarr[n] is int               
+           iarr[0] = iarr[size - 1];
+           iarr[size - 1] = tmp;
+       }
+       
+       int main() {
+           int iarray[] = { 3, 4, 7, 1, 23 };
+       
+           printf("Start: %d; End: %d\n", iarray[0], iarray[4]);
+           swap_ends(iarray, 5);
+           printf("Start: %d; End: %d\n", iarray[0], iarray[4]);
+           
+           return 0;
+       }       
        ```
+       
+       Play around with this code. You can safely execute it and modify it to do a range of things. Try to make it more useful.
+       
+    2. This is a good place to mention the common C novice blunder of trying to return an array from a function which created it. Here's the scenario:
+    
+       ```C
+       #include <stdio.h>
+       
+       // NOTENOTE: DON'T DO THIS! :D
+       
+       int *get_array() {
+           int iarray[] = { 3, 4, 7, 1, 23 };
+       
+           return iarray;           
+       }
+       
+       int main() {
+           int *iarray = get_array();
+       
+           printf("Start: %d; End: %d\n", iarray[0], iarray[4]);
+           
+           return 0;
+       }       
+       ```
+       
+       First, notice the syntax: both the return type of `get_array()` and the type of the receiving array `iarray` are `int *` (pointer-to-integer). If this was a sensible thing to do, this is the correct syntax to do it. The problem is elsewhere.
+       
+       The problem has to do with the _call stack_, a memory segment that is allocated to every running program, where functions that are called are each allotted a record, called a _stack frame_, where the functions arguments, its local variables, and the address to which to return to when its done are all stored. As it should be obvious from the name "stack", these records are stored one on top of the other, with the frame for `main` on the "bottom" and the latest nested function call on the "top". (Frequently, program stacks are actually stored "upside-down" so `main`'s frame is at the "top".) 
+       
+       So, what happens here is that when `main` makes a call to `get_array` on the first line, the stack looks something like this:
+
+       ```       
+       (top of the stack)
+       ______________________
+       | 3 | 4 | 7 | 1 | 23 |
+       |--------------------|   stack frame for get_array
+       | other data         |
+       |____________________|
+       | iarray             |
+       |--------------------|   stack frame for main
+       | other data         |
+       |____________________|
+
+       (bottom of the stack)
+       ```
+       The called function `get_array` has the local array allocated in its stack frame, and returns a pointer to it to the calling function `main`. And then, when it returns, its stack frame is wiped out (or just reclaimed for use by the next function `main` may call). Ooops! Now `main` has a pointer to memory that is _no longer valid_! This is the situation on the stack the morning after...
+       ```       
+                ???          <-----\     
+                                   |
+       (top of the stack)          |
+        ____________________       |
+       | iarray    •--------|------/
+       |--------------------|   stack frame for main
+       | other data         |
+       |____________________|
+              
+       (bottom of the stack)
+       ```
+       This is called a _dangling pointer_, and is only one of the cases in which it is likely to have one. Let this illustration serve as a reminder to check your pointers and develop good practices when writing C code.
+       
+       
