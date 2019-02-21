@@ -455,6 +455,8 @@ Working notes:
         - there is no difference in how we manipulate a dynamically and a non-dynamically (that is, statically) allocated array
         - the function `free` takes a pointer-type argument, specifically a pointer that received the return value of a call to `malloc`, `calloc`, or `realloc`
         - `malloc` returns a _generic pointer_ of the type `void *`, and so it has to be explicitly _cast_ into the type of the receiving pointer, by specifying the latter in parentheses right before the call to `malloc`
+        - checking if the result of `malloc` is non-`NULL` is essential (that is, the memory allocation succeeded), because dereferencing a `NULL` pointer is an automatic `Segmentation fault` error
+        - if the memory allocation does not succeed, it might make sense to exit the program altogether, in which case we can do a premature `return` and return a non-zero value, indicating error
         
       Run this code and experiment with dynamically allocated arrays. Develop the discipline to release the allocated memory!
 
