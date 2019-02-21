@@ -15,11 +15,11 @@ Working notes:
    3. ~~Working with arrays in functions.~~
    4. ~~Structures.~~
    5. ~~(Optional) The `typedef` keyword.~~
-   6. Allocation on the stack (aka _static_ allocation) vs allocation on the heap (aka _dynamic_ allocation). The `malloc` and `free` functions.
+   6. ~~Allocation on the stack (aka _static_ allocation) vs allocation on the heap (aka _dynamic_ allocation). The `malloc` and `free` functions.~~
 2. Sorting algorithms
    1. Program organization.
    2. A short selection of functions from the C Standard Library.
-   3. Useful functions, esp. sensible encapsulation & meaningful contracts (e.g. who initializes array arguments).
+   3. Writing useful functions, esp. sensible encapsulation & meaningful contracts (e.g. who initializes array arguments).
    4. Encapsulation of comparison functions (e.g. for sorting algorithms).
    5. Toward ADT: Declare a structure type and comparison function for it, exposing only pointers in the header.
 
@@ -517,7 +517,7 @@ Working notes:
           for (int j=0; j<1000; j++)
               data_cube[i][j] = (double *) malloc(sizeof(double) * 1000); 
       
-      // use...
+      // use the data cube...
 
       // free 3rd dimension
       for (int i=0; i<1000; i++)
@@ -535,10 +535,67 @@ Working notes:
       
       Try this yourself. Visualize it for a small cube (say, dimension 3). Assign and then print out some values, so you can test that it works. 
       
-   4. static vs dynamic... TODO
+   4. Here we'll summarize the two memory allocation types in C: _static_ and _dynamic_. _Dynamic_ allocation is done with `malloc` and its variants, and is released with `free`. _Dynamic_ allocations are made on the _heap_, and their sizes are known at _runtime_. _Dynamic_ finally indicates that, since the data is manipulated through pointers, their sizes can change dynamically during _runtime_.
    
-   5. no arrays on the stack... TODO
-   
-   6. two techniques for dynamic allocation in functions (double pointer argument and return and assign)... TODO
-   
-   7. static allocation... TODO
+      Every other variable declaration is considered _static_. This includes global variables (that is, variables that are outside of any function), local variables (that is, variables declared in functionsl), function arguments, constants, etc. _Static_ allocations are made on the stack or data segments, and their sizes are known at _compile time_. _Static_ allocations persist throughout the running program and are not lost, moved, or changed until it terminates.
+      
+      Take a look at the variable allocations throughout this tutorial and try to determine if the variables have been allocated statically or dynamically. **A quiz question:** Are the pointers pointing to `malloc`-ed data _statically_ or _dynamically_ allocated? Or maybe both? Can you show examples?
+
+   5. We will wrap up with two programming guidelines that emerge from this setup. The first one is that it is ill advised to declare large _static_ data structures, especially in functions. Since all local function data goes on the stack, the stack frame may become severely inflated and cause stack overflow problems. Here is an example contrasting a static and a dynamic array in a function:
+      ```C
+      // a function declaring a static local array
+      // it may cause the stack to overflow, but also
+      // slows down the program, because creating such
+      // a large stack frame takes time
+      void foo() {
+          int iarr[1000][1000][1000];  // don't do that!
+          
+          // use iarr
+      }
+      
+      // instead, consider passing a dynamically allocated
+      // array as an argument
+      // this will keep the stack frame at minimal size
+      void bar(int ***data_cube) {
+         // use data_cube
+         
+      }
+      ```  
+      Think of a scenario where you might want to have a setup like this. Implement a small example to show it work.
+           
+   6. Finally, we'll see two techniques for dynamic allocation from within a function.
+      1. **Pointer-to-pointer argument**. Since C passes arguments by value, pointers are also passed by value. So, if we want to change what a pointer, passes as argument to a function, points to, we need to pass a pointer to the pointer. Here's an illustration:
+         ```C
+         void allocate_array(int **a) {
+             *a = (int *) malloc(sizeof(int) * 100;
+         }
+         
+         int main() {
+             int *int_array;
+             
+             allocate_array(&int_array);
+             
+             if (int_array) {
+                 // use int_array...
+             }
+             
+             return 0;
+         }
+         ```          
+      2. **Return-and-assign**. Alternatively, we can mimic what `malloc` does and return a pointer to an allocated array.
+         ```C
+         int *allocate_array() {
+             return (int *) malloc(sizeof(int) * 100;
+         }
+         
+         int main() {
+             int *int_array; = allocate_array();
+             
+             if (int_array) {
+                 // use int_array...
+             }
+             
+             return 0;
+         }
+         ```
+      Keep these techniques in mind. Can you think of some pros and cons for each one?
