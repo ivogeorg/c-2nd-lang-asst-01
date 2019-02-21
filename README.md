@@ -383,10 +383,51 @@ Working notes:
 
    1. A program, whether in source or binary format, is just a file on the hard drive. It needs to be _activated_ to run. The activation involves several steps, a simplified list of which is:
       - it is read in from disk to main memory
-      - it is allocated several different memory segments: for the code, for the initialized data, for the uninitialized data, for constants, for the _stack_, and for the _heap_
+      - it is allocated, in virtual memory 4KB _pages_, several different memory segments: for the code, for the initialized data, for the uninitialized data, for constants, for the _stack_, and for the _heap_
       - the virtual memory _page_ containing the _entry point_ for the program is loaded into a physical memory _frame_
       - the process record (containing various data required for running the program) is added to the queue for READY processes
       
-      Most of these details are beyond the scope of this intro, and will be presented in-depth in the course on Operating Systems. For now, all we need to be aware of is that each program, when activated, is allocated several memory segments, each fulfilling a different role in the execution of the process. (For the our purposes, _process_ is an _activated program_.) In particular we are interested in the _stack_ and the _heap_.
+      Most of these details are beyond the scope of this intro, and would be presented in-depth in a course on Operating Systems. For now, all we need to be aware of is that each program, when activated, is allocated several memory segments, each fulfilling a different role in the execution of the process. (For the our purposes, _process_ is an _activated program_.) Here is a list with a brief description:
+        - **code**: this is where the compiled and linked machine code (in binary format) of your program resides, including all the functions you created
+        - **initialized data**: a segment that holds static (more on this later) variables to which you have assigned initial values
+        - **constant data** (may be part of **initialized data**): a memory segments holding constants you have declared, not expected to be written, but only read (this ensures speed and gives a hint for caching)
+        - **uninitialized data**: a segment that holds static variables to which you have not assigned initial values
+        - **stack**: already presented, a stack-like memory segment, which holds the activation records (aka stack frames) of all function calls
+        - **heap**: a segment of memory for use for user-managed data allocations, characterized by the following:
+          - the allocations are performed by calls to the `malloc()`, `calloc()`, `realloc()`, and `free()` functions
+          - they are collectively known as _dynamic allocation_ (as opposed to _static_, more on which later)
+          - their sizes are known only at runtime (as opposed to compile-time)
+          - each _dynamically allocated_ datum is manipulated through **pointers** (so, pointers are all about dynamic memory management on the heap)
       
-      The _stack_ was already introduced. It contains 
+      Here is a basic example of allocating an integer and an integer array on the heap:
+      ```C
+      #include <stdlib.h>
+      #include <stdio.h>
+      
+      int main() {
+          int *array_size = (int *) malloc(sizeof(int));
+          int size = 8;
+
+          if (array_size == NULL) {
+              printf("ERROR: Memory allocation failed!\n");
+              return 1;
+          } else {
+              *array_size = 10;
+          }
+          
+          int *int_array = (int *) malloc(*array_size * sizeof(int));
+          if (int_array == NULL) {
+              printf("ERROR: Memory allocation failed!\n");
+              return 0;
+          } else {
+              for (int i = 0; i < *array_size; i ++) {
+                  int_array[i] = i * *array_size;
+                  printf("Array element %d holds %d\n", i, int_array[i]);
+              }
+          }
+      
+          return 0;
+      }
+      ```
+      Things to notice:
+        - 
