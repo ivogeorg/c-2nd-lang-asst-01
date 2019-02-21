@@ -16,12 +16,12 @@ Working notes:
    4. ~~Structures.~~
    5. ~~(Optional) The `typedef` keyword.~~
    6. Allocation on the stack (aka _static_ allocation) vs allocation on the heap (aka _dynamic_ allocation). The `malloc` and `free` functions.
-   7. Dynamic memory allocation & correct size calculations.
 2. Sorting algorithms
    1. Program organization.
    2. A short selection of functions from the C Standard Library.
    3. Useful functions, esp. sensible encapsulation & meaningful contracts (e.g. who initializes array arguments).
    4. Encapsulation of comparison functions (e.g. for sorting algorithms).
+   5. Toward ADT: Declare a structure type and comparison function for it, exposing only pointers in the header.
 
 ---
 
@@ -405,17 +405,24 @@ Working notes:
       #include <stdio.h>
       
       int main() {
+          // explicit allocation of an integer on the heap
           int *array_size = (int *) malloc(sizeof(int));
           int size = 8;
 
+          // check if the allocation was successful
+          // if it was, the pointer will be non-NULL
           if (array_size == NULL) {
               printf("ERROR: Memory allocation failed!\n");
               return 1;
           } else {
               *array_size = 10;
           }
-          
+
+          // explicit allocation of an integer array on the heap
           int *int_array = (int *) malloc(*array_size * sizeof(int));
+
+          // check if the allocation was successful
+          // if it was, the pointer will be non-NULL
           if (int_array == NULL) {
               printf("ERROR: Memory allocation failed!\n");
               return 0;
@@ -425,9 +432,38 @@ Working notes:
                   printf("Array element %d holds %d\n", i, int_array[i]);
               }
           }
+          
+          // free the allocated memory:
+          // dynamically allocated memory
+          // has to be released explicitly
+          free(array_size);
+          array_size = NULL; // this is good practice in case 
+                             // the pointer might get reused
+
+          free(int_array);
+          int_array == NULL;
       
           return 0;
       }
       ```
       Things to notice:
-        - 
+        - the library header `stdlib.h` is included, to give access to the memory management functions `malloc`, `free`, etc.
+        - the pointers that hold a dynamically allocated integer and a dynamically allocated integer array are of the same type, pointer-to-integer (int *)
+        - the function `malloc` takes an argument of type `size_t` and which expresses the size of memory to be allocated, in _bytes_
+        - the [operator](https://en.cppreference.com/w/cpp/language/sizeof) `sizeof` is used to get the size of the base type, both for the sole integer and the integer array
+        - the argument in the call to `malloc` for the integer array is the size of the array times the size of the base type
+        - there is no difference in how we manipulate a dynamically and a non-dynamically (that is, statically) allocated array
+        - the function `free` takes a pointer-type argument, specifically a pointer that received the return value of a call to `malloc`, `calloc`, or `realloc`
+        - `malloc` returns a _generic pointer_ of the type `void *`, and so it has to be explicitly _cast_ into the type of the receiving pointer, by specifying the latter in parentheses right before the call to `malloc`
+        
+      Run this code and experiment with dynamically allocated arrays. Develop the discipline to release the allocated memory!
+
+   2. dynamic arrays with `struct` base type... TODO 
+   
+   3. correct size calculation... TODO
+   
+   4. static vs dynamic... TODO
+   
+   5. no arrays on the stack... TODO
+   
+   
