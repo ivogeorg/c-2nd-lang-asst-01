@@ -14,7 +14,7 @@ Working notes:
    2. ~~Array-pointer duality.~~
    3. ~~Working with arrays in functions.~~
    4. ~~Structures.~~
-   5. (Optional) The `typedef` keyword.
+   5. ~~(Optional) The `typedef` keyword.~~
    6. Allocation on the stack (aka _static_ allocation) vs allocation on the heap (aka _dynamic_ allocation). The `malloc` and `free` functions.
    7. Dynamic memory allocation & correct size calculations.
 2. Sorting algorithms
@@ -379,4 +379,14 @@ Working notes:
         - we are defining aliases for the structure and pointers to the structure
         - there is no `student_record` name, because it's now redundant
         
-6. 
+6. Allocation on the stack (aka _static_ allocation) vs allocation on the heap (aka _dynamic_ allocation).
+
+   1. A program, whether in source or binary format, is just a file on the hard drive. It needs to be _activated_ to run. The activation involves several steps, a simplified list of which is:
+      - it is read in from disk to main memory
+      - it is allocated several different memory segments: for the code, for the initialized data, for the uninitialized data, for constants, for the _stack_, and for the _heap_
+      - the virtual memory _page_ containing the _entry point_ for the program is loaded into a physical memory _frame_
+      - the process record (containing various data required for running the program) is added to the queue for READY processes
+      
+      Most of these details are beyond the scope of this intro, and will be presented in-depth in the course on Operating Systems. For now, all we need to be aware of is that each program, when activated, is allocated several memory segments, each fulfilling a different role in the execution of the process. (For the our purposes, _process_ is an _activated program_.) In particular we are interested in the _stack_ and the _heap_.
+      
+      The _stack_ was already introduced. It contains 
