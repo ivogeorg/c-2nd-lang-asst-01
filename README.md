@@ -598,4 +598,4 @@ Working notes:
              return 0;
          }
          ```
-      Keep these techniques in mind. Can you think of some pros and cons for each one?
+      Keep these techniques in mind. Can you think of some pros and cons for each one? In each case, who is responsible for _memory management_, the _caller_ or the _callee_? _Hint: Think of the _symmetry_ of allocation and deallocation/release/freeing of memory._
