@@ -13,15 +13,15 @@ Working notes:
    1. ~~Pointers, esp. passing them around as arguments and return values.~~
    2. ~~Array-pointer duality.~~
    3. ~~Working with arrays in functions.~~
-   4. Structures.
+   4. ~~Structures.~~
    5. (Optional) The `typedef` keyword.
-   6. Allocation on the stack (aka _static_ allocation) vs the heap (aka _dynamic_ allocation). The `malloc` and `free` functions.
+   6. Allocation on the stack (aka _static_ allocation) vs allocation on the heap (aka _dynamic_ allocation). The `malloc` and `free` functions.
    7. Dynamic memory allocation & correct size calculations.
 2. Sorting algorithms
    1. Program organization.
    2. A short selection of functions from the C Standard Library.
    3. Useful functions, esp. sensible encapsulation & meaningful contracts (e.g. who initializes array arguments).
-   4. Encapsulation of `compare`(e.g. for sorting algorithms).
+   4. Encapsulation of comparison functions (e.g. for sorting algorithms).
 
 ---
 
@@ -341,6 +341,42 @@ Working notes:
       However, using this syntax is laborious and error-prone, especially in the cases of multiple levels of indirection. So, a substitute operator `->` is used to access members from a pointer to a struct, as shown above. Notice that its precedence is higher than that of the dereferencing (indirection) operator `*` (not to be mistaken with multiplication!).
       
    
-5. (Optional) The `typedef` keyword is used to define aliases for types.
+5. (Optional) The `typedef` keyword is used to define aliases for types. It is optional, because it adds no further feature, just convenience.
 
+   1. Typing `struct student_record` for each declaration of a student record or pointer to a student record might feel laborious. We can shorten our load by using `typedef` as follows:
    
+      ```C
+      typedef struct student_record student_t; // typedef [type] [type alias]
+                                               
+                                               // the trailing _t is a good
+                                               // practice when declaring
+                                               // type aliases
+      ```
+      From now on we can do the following declarations and the C compiler will resolve them correctly:
+      ```C
+      student_t lm245 = { "logan", "monaghan", "900987321", 2015 };
+      student_t *student_handle = &lm245;
+      ```
+      
+   2. This can actually be done right at the first type declaration, as follows:
+   
+      ```C
+      typedef struct {              // the name is optional
+          char first_name[10];      
+          char last_name[10];       
+          char nine_hundred[10];
+          int year_first_enrolled;
+      } student_t, *student_p;      // notice the `*` for the pointer type
+                                    
+                                    // the use of a trailing _p or _ptr
+                                    // just like the trailing _t for the
+                                    // non-pointer type alias is a good
+                                    // practice and improves readability
+                                    // (and sanity, trust me :D)
+      ```
+      Notice the following:
+        - `typedef` precedes the `struct` keyword
+        - we are defining aliases for the structure and pointers to the structure
+        - there is no `student_record` name, because it's now redundant
+        
+6. 
