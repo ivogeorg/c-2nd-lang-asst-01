@@ -19,8 +19,9 @@ Working notes:
    7. Dynamic memory allocation & correct size calculations.
 2. Sorting algorithms
    1. Program organization.
-   2. Useful functions, esp. sensible encapsulation & meaningful contracts (e.g. who initializes array arguments).
-   3. Encapsulation of `compare`(e.g. for sorting algorithms).
+   2. A short selection of functions from the C Standard Library.
+   3. Useful functions, esp. sensible encapsulation & meaningful contracts (e.g. who initializes array arguments).
+   4. Encapsulation of `compare`(e.g. for sorting algorithms).
 
 ---
 
@@ -284,14 +285,14 @@ Working notes:
        ```
        This is called a _dangling pointer_, and is only one of the cases in which it is likely to have one. Let this illustration serve as a reminder to check your pointers and develop good practices when writing C code.
        
-4. _Structures_ are C's way of packing data of several different types into monolithic records. 
+4. [_Structures_](https://en.cppreference.com/w/c/language/struct) are C's way of packing data of several different types into monolithic records. 
 
    1. Structures, along with the _abstract data type_ technique in C (rather advanced and beyond the scope of this intro), are the predecessors of _classes_ in C++. The `struct` keyword is used to declare a named block of code which contains only variable declarations: primitive types, pointer types, or even other `struct` types. Incidentally, the `struct` and `class` keywords are equivalent and interchangeable for C++ classes. Let's see an example:
    
       ```C
       struct student_record {
-          char first_name[10];
-          char last_name[10];
+          char first_name[10];      // these are called members or fields
+          char last_name[10];       // they can be of any type
           char nine_hundred[10];
           int year_first_enrolled;
       };
@@ -300,8 +301,46 @@ Working notes:
       
       Declare some structure types of your own.
       
-   2. member access... TODO
+   2. The member access syntax for structures will be familiar to anyone who has worked with object-oriented languages. Here's a quick example:
    
-   3. pointers to structures... TODO
+      ```C
+      struct student_record jm123 = { "john", "michaels", "900123456", 1994 };
+      printf("%s-%s-%s-%d\n", jm123.first_name, 
+                              jm123.last_name, 
+                              jm123.nine_hundred, 
+                              jm123.year_first_enrolled);
+      ```
+      
+      The first line is a declaration of a variable of type `struct student_record`. The name `jm123` is arbitrary. The assignment of values within curly braces `{}` is called _initialization_. This is the easiest way to assign values to non-pointer members. If you want to assign string-type members one-by-one, you may find the functions in the `<string.h>` library very handy. More on this later. If you have pointer-type members, you will need to handle the _dynamic allocation_ yourself. More on that later, too.
+      
+      Play around with structures, initialization with suitable values, and printing them out.  
    
-5. The `typedef` keyword... TODO
+   3. Pointers can point to anything, and structures are no exception. Here is an example:
+   
+      ```C
+      struct student_record *student_pointer = &jm123;
+      printf("%s-%s-%s-%d\n", student_pointer->first_name, 
+                              student_pointer->last_name, 
+                              student_pointer->nine_hundred, 
+                              student_pointer->year_first_enrolled);
+      
+      ```
+      
+      Since `student_pointer` is of type `struct student_record *` (that is, pointer to a structure of type `struct student_record`), we need to dereference it before we can access the members of the structure it points to. The proper way to do that, due to [_operator precedence_](https://en.cppreference.com/w/c/language/operator_precedence), is as follows:
+      ```C
+      struct student_record *student_pointer = &jm123;
+      printf("%s-%s-%s-%d\n", (*student_pointer).first_name,           // parentheses have among the
+                              (*student_pointer).last_name,            // highest precedences of C
+                              (*student_pointer).nine_hundred,         // operators, so to dereference
+                              (*student_pointer).year_first_enrolled); // first, and only then access
+                                                                       // a member, we put the derefe-
+                                                                       // rencing *student_pointer in
+                                                                       // parentheses      
+      ```
+      
+      However, using this syntax is laborious and error-prone, especially in the cases of multiple levels of indirection. So, a substitute operator `->` is used to access members from a pointer to a struct, as shown above. Notice that its precedence is higher than that of the dereferencing (indirection) operator `*` (not to be mistaken with multiplication!).
+      
+   
+5. (Optional) The `typedef` keyword is used to define aliases for types.
+
+   
