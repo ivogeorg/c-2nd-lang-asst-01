@@ -468,4 +468,6 @@ Working notes:
    
    5. no arrays on the stack... TODO
    
+   6. two techniques for dynamic allocation in functions (double pointer argument and return and assign)... TODO
    
+   7. static allocation... TODO
