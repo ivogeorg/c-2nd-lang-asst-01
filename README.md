@@ -460,10 +460,81 @@ Working notes:
         
       Run this code and experiment with dynamically allocated arrays. Develop the discipline to release the allocated memory!
 
-   2. dynamic arrays with `struct` base type... TODO 
+   2. Arrays can have primitive, pointer, and complex base types. Here is an example of one of each, all dynamically allocated:
+      ```C
+      float *data = (float *) malloc(sizeof(float) * 1000); // primitive
+      if (data != NULL) {
+          // use data...
+      }
+      free(data);
+      data = NULL;
+      ```
+      A two-dimensional array is an array of pointers (to one-dimensional arrays).
+      ```C
+      double **square_table;  // the type of square_table is double **,
+                              // that is, a double pointer to double (LOL!)
+      square_table = (double **) malloc(sizeof(double *) * 100);    // allocate the 1st dimension
+                                                                     // notice the cast and base size!!
+      if (square_table != NULL) {
+          for (int i=0; i<100; i++)
+              square_table[i] = (double *) malloc(sizeof(double) * 100); // allocate the 2nd dimension 
+          // use the 2D array
+          // technically, you should check if the allocations worked
+      }
+      // for the second dimension, you need to call free() in a loop!!
+      for (int i=0; i<1000; i++) {
+          free(square_table[i]);
+          square_table[i] = NULL;
+      }
+      // now you can free the first dimension
+      free(square_table);
+      square_table = NULL;
+      ``` 
+      Finally, arrays can have `struct` base types. We'll use our `student_t` and `student_p` types from before.
+      ```C
+      student_p roster = (student_p) malloc(sizeof(student_t) * 35); // notice the base type
+                                                                     // and the pointer (array) type
+      if (roster) {  // notice that "if (roster) {}" is equivalent to "if (roster != NULL) {}"
+          // use student roster...
+      }
+      free (roster);
+      ```
+      Experiment with dynamically allocated arrays, especially with complex (i.e. structure) base types. This is one of the most powerful features of the C language.
    
-   3. correct size calculation... TODO
-   
+   3. One has to pay special attention to the base types when allocating dynamic arrays. Notice the base types for the dynamically-allocated 2D data table shown previously. Let's take this one step further and have a 3D data table, to show the regularity of the return types of the `malloc` allocations and the the base types indicated by the `sizeof` operator. The NULL-checking is omitted for clarity, but should NOT be forgotten!
+      ```C
+      double ***data_cube;
+      
+      // allocate 1st dimension                       
+      data_cube = (double ***) malloc(sizeof(double **) * 1000);
+      
+      // allocate 2nd dimension
+      for (int i=0; i<1000; i++)
+          data_cube[i] = (double **) malloc(sizeof(double *) * 1000); 
+
+      // allocate 3rd dimension
+      for (int i=0; i<1000; i++)
+          for (int j=0; j<1000; j++)
+              data_cube[i][j] = (double *) malloc(sizeof(double) * 1000); 
+      
+      // use...
+
+      // free 3rd dimension
+      for (int i=0; i<1000; i++)
+          for (int j=0; j<1000; j++)
+              free(data_cube[i][j]); 
+
+      // free 2nd dimension
+      for (int i=0; i<1000; i++)
+          free(data_cube[i]);
+
+      // free 1st dimension
+      free(data_cube);
+      ``` 
+      Notice the **reverse order** of releasing the allocated memory! If you mess this one up, you may either leave dangling pointers, try to free NULL pointers, or both.  
+      
+      Try this yourself. Visualize it for a small cube (say, dimension 3). Assign and then print out some values, so you can test that it works. 
+      
    4. static vs dynamic... TODO
    
    5. no arrays on the stack... TODO
