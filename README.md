@@ -9,14 +9,14 @@ The topics that will be explored are some of the most important in C and account
 ---
 
 Working notes:
-1. C ramp up
+1. Part I: C ramp up
    1. ~~Pointers, esp. passing them around as arguments and return values.~~
    2. ~~Array-pointer duality.~~
    3. ~~Working with arrays in functions.~~
    4. ~~Structures.~~
    5. ~~(Optional) The `typedef` keyword.~~
    6. ~~Allocation on the stack (aka _static_ allocation) vs allocation on the heap (aka _dynamic_ allocation). The `malloc` and `free` functions.~~
-2. Sorting algorithms
+2. Part II: Sorting algorithms
    1. Program organization.
    2. A short selection of functions from the C Standard Library.
    3. Writing useful functions, esp. sensible encapsulation & meaningful contracts (e.g. who initializes array arguments).
