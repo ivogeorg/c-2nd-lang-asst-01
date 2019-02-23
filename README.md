@@ -589,7 +589,7 @@ Working notes:
          }
          
          int main() {
-             int *int_array; = allocate_array();
+             int *int_array = allocate_array();
              
              if (int_array) {
                  // use int_array...
