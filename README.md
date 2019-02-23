@@ -16,7 +16,7 @@ Working notes:
    4. ~~Structures.~~
    5. ~~(Optional) The `typedef` keyword.~~
    6. ~~Allocation on the stack (aka _static_ allocation) vs allocation on the heap (aka _dynamic_ allocation). The `malloc` and `free` functions.~~
-2. Part II: Sorting algorithms
+2. Part II: Sorting algorithms (In separate repository)
    1. Program organization.
    2. A short selection of functions from the C Standard Library.
    3. Writing useful functions, esp. sensible encapsulation & meaningful contracts (e.g. who initializes array arguments).
@@ -599,3 +599,7 @@ Working notes:
          }
          ```
       Keep these techniques in mind. Can you think of some pros and cons for each one? In each case, who is responsible for _memory management_, the _caller_ or the _callee_? _Hint: Think of the _symmetry_ of allocation and deallocation/release/freeing of memory._
+
+## II. Sorting algorithms (In separate repository)
+
+**Note:** This part of the assignment is in a separate repository.
