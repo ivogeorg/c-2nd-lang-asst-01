@@ -602,4 +602,4 @@ Working notes:
 
 ## II. Sorting algorithms (In separate repository)
 
-**Note:** This part of the assignment is in a separate repository.
+**Note:** This part of the assignment is in a [separate repository](https://github.com/ivogeorg/c_2nd_lang_asst_02.git).
