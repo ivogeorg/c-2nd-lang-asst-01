@@ -6,6 +6,8 @@ If such knowledge is lacking, then a self-study tutorial like [learn-c](https://
 
 The topics that will be explored are some of the most important in C and account for a great deal of its power and popularity. They can be considered _"advanced basics"_.
 
+_**Note:** If you add new source files to the repository as demonstrated in class, don't forget to add them to the project target, next to `main.c`, in `CMakeLists.txt`._
+
 ---
 
 Working notes:
