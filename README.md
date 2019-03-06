@@ -603,3 +603,19 @@ Working notes:
 ## II. Sorting algorithms (In separate repository)
 
 **Note:** This part of the assignment is in a [separate repository](https://github.com/ivogeorg/c_2nd_lang_asst_02.git).
+
+Pointer exercises
+1. Two main variable types in C, data and pointers.
+2. The C programmer's model: code, data (read/write, read-only), stack, and heap.
+3. Arrays of structures: static vs pointer. Sorting advantage.
+4. Linked list: the quintessential pointer data structure. Insert/delete in the middle advantage.
+5. Pointers and functions.
+6. Pointers to functions.
+7. Program address space.
+8. The compilation process: from C to assembly.
+   - C grammar
+   - lexing (syntax & keywords)
+   - parsing (parse tree)
+   - symbol table: compile-time data
+   - optimization
+   - translation to assembly

@@ -18,12 +18,15 @@
 // needs the declarations and the linker needs
 // the definitions.
 void some_pointer_play_function();
+void run_arrays();
 
 
 int main() {
     printf("Hello, MSUD!\n");
 
     some_pointer_play_function();
+
+    run_arrays();
 
     return 0;
 }

@@ -3,4 +3,4 @@ project(c-2nd-lang-asst-01 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(casst main.c pointers.c)
+add_executable(casst main.c pointers.c arrays.c)
